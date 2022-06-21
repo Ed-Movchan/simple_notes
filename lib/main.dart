@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Simple Note',
+      debugShowCheckedModeBanner: false,
       home: NotePage(),
     );
   }
@@ -50,13 +51,10 @@ class _NotePageState extends State<NotePage> {
       appBar: AppBar(
         title: const Text('Simple Note'),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.cyan,
       ),
       body: Column(
         children: <Widget>[
-          const Divider(
-            height: 5.0,
-          ),
           Expanded(
             child: FutureBuilder(
               future: _notesList,
@@ -64,7 +62,8 @@ class _NotePageState extends State<NotePage> {
                 if (snapshot.hasData) {
                   return generateList(snapshot.data as List<Note>);
                 }
-                if (snapshot.data == null || (snapshot.data as List<Note>).isEmpty) {
+                if (snapshot.data == null ||
+                    (snapshot.data as List<Note>).isEmpty) {
                   return const Text('No Data Found');
                 }
                 return const CircularProgressIndicator();
@@ -77,7 +76,8 @@ class _NotePageState extends State<NotePage> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   child: TextFormField(
                     validator: (value) {
                       if (value == null) {
@@ -130,8 +130,7 @@ class _NotePageState extends State<NotePage> {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
                       DBProvider.db
-                          .updateNote(
-                          Note(noteIdForUpdate!, _noteText))
+                          .updateNote(Note(noteIdForUpdate!, _noteText))
                           .then((data) {
                         setState(() {
                           isUpdate = false;
@@ -178,39 +177,63 @@ class _NotePageState extends State<NotePage> {
   SingleChildScrollView generateList(List<Note> notes) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: DataTable(
-          columns: const [
-            DataColumn(
-              label: Text('TEXT'),
-            ),
-            DataColumn(
-              label: Text('DELETE'),
-            ),
-          ],
-          rows: notes
-              .map(
-                (note) => DataRow(cells: [
-              DataCell(Text(note.text), onTap: () {
-                setState(() {
-                  isUpdate = true;
-                  noteIdForUpdate = note.id;
-                });
-                _noteTextController.text = note.text;
-              }),
-              DataCell(
-                IconButton(
-                  icon: const Icon(Icons.delete_forever, color: Colors.red,),
-                  onPressed: () {
-                    DBProvider.db.deleteStudent(note.id);
-                    updateNoteList();
-                  },
-                ),
+      child: Container(
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(width: 3),
+          borderRadius: const BorderRadius.all(Radius.circular(5) //
               ),
-            ]),
-          )
-              .toList(),
+        ),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: DataTable(
+            horizontalMargin: 10,
+            border: TableBorder.all(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.black38,
+                width: 1,
+                style: BorderStyle.solid),
+            columns: const [
+              DataColumn(
+                label: Text('TEXT',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ),
+              DataColumn(
+                label: Text('DELETE',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ),
+            ],
+            rows: notes
+                .map(
+                  (note) => DataRow(
+                      selected: true,
+                      cells: [
+                    DataCell(Text(note.text), onTap: () {
+                      setState(() {
+                        isUpdate = true;
+                        noteIdForUpdate = note.id;
+                      });
+                      _noteTextController.text = note.text;
+                    }),
+                    DataCell(
+                      IconButton(
+                        icon: const Icon(
+                          Icons.delete_forever,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          DBProvider.db.deleteStudent(note.id);
+                          updateNoteList();
+                        },
+                      ),
+                    ),
+                  ]),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
