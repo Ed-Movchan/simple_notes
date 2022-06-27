@@ -70,7 +70,7 @@ class DBProvider {
   }
 
   // DELETE
-  Future<int> deleteStudent(int? id) async {
+  Future<int> deleteNote(int? id) async {
     Database db = await database;
     return await db.delete(
       notesTable,

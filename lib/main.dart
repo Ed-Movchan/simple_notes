@@ -140,7 +140,6 @@ class _NotePageState extends State<NotePage> {
                   } else {
                     if (_formStateKey.currentState!.validate()) {
                       _formStateKey.currentState!.save();
-                      // DBProvider.db.insertStudent(Student(null, _studentName));
                       DBProvider.db.insertNote(Note(null, _noteText));
                     }
                   }
@@ -182,15 +181,18 @@ class _NotePageState extends State<NotePage> {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(width: 3),
-          borderRadius: const BorderRadius.all(Radius.circular(5) //
+          borderRadius: const BorderRadius.all(Radius.circular(10) //
               ),
         ),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: DataTable(
             horizontalMargin: 10,
+            columnSpacing: 10,
+            headingRowColor: MaterialStateProperty.all(Colors.grey),
+            dataRowColor: MaterialStateProperty.all(Colors.lime),
             border: TableBorder.all(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
                 color: Colors.black38,
                 width: 1,
                 style: BorderStyle.solid),
@@ -206,11 +208,10 @@ class _NotePageState extends State<NotePage> {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ),
             ],
+            headingRowHeight: 40,
             rows: notes
                 .map(
-                  (note) => DataRow(
-                      selected: true,
-                      cells: [
+                  (note) => DataRow(cells: [
                     DataCell(Text(note.text), onTap: () {
                       setState(() {
                         isUpdate = true;
@@ -219,15 +220,18 @@ class _NotePageState extends State<NotePage> {
                       _noteTextController.text = note.text;
                     }),
                     DataCell(
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete_forever,
-                          color: Colors.red,
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.delete_forever,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            DBProvider.db.deleteNote(note.id);
+                            updateNoteList();
+                          },
                         ),
-                        onPressed: () {
-                          DBProvider.db.deleteStudent(note.id);
-                          updateNoteList();
-                        },
                       ),
                     ),
                   ]),
