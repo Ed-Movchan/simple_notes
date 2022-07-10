@@ -190,9 +190,9 @@ class _NotePageState extends State<NotePage> {
             horizontalMargin: 10,
             columnSpacing: 10,
             headingRowColor: MaterialStateProperty.all(Colors.grey),
-            dataRowColor: MaterialStateProperty.all(Colors.lime),
+            dataRowColor: MaterialStateProperty.all(Colors.yellow.shade200),
             border: TableBorder.all(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
                 color: Colors.black38,
                 width: 1,
                 style: BorderStyle.solid),
