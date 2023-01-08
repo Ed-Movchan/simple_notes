@@ -119,7 +119,7 @@ class _NotePageState extends State<NotePage> {
             children: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   textStyle: const TextStyle(color: Colors.white),
                 ),
                 child: Text(
@@ -152,7 +152,7 @@ class _NotePageState extends State<NotePage> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
+                  backgroundColor: Colors.red,
                   textStyle: const TextStyle(color: Colors.white),
                 ),
                 child: Text(
